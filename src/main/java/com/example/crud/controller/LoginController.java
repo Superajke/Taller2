@@ -29,12 +29,16 @@ public class LoginController {
   ) {
     Optional<User> userOptional = userService.getUserByEmail(email);
     if (
-      userOptional.isPresent() &&
-      userOptional.get().getPassword().equals(password)
+      userOptional.isPresent() && userOptional.get().getEmail().equals(email)
     ) {
-      return "redirect:/app/home/" + email;
+      if (userOptional.get().getPassword().equals(password)) {
+        return "redirect:/app/home/" + email;
+      } else {
+        model.addAttribute("loginError", "contraseña incorrecta");
+        return "login";
+      }
     } else {
-      model.addAttribute("loginError", "Email o contraseña incorrecta");
+      model.addAttribute("loginError", "Email incorrecto");
       return "login";
     }
   }
